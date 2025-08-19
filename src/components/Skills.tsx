@@ -15,7 +15,7 @@ const skills: Skill[] = [
     { name: "Kotlin", level: 50 },
 ];
 
-export default function Skills({ darkMode = false }: { darkMode?: boolean }) {
+export default function Skills({ darkMode = false, lang = "hu" }: { darkMode?: boolean; lang?: "hu" | "en" }) {
     const [started, setStarted] = useState(false);
     const [animatedLevels, setAnimatedLevels] = useState<number[]>(skills.map(() => 0));
     const sectionRef = useRef<HTMLDivElement>(null);

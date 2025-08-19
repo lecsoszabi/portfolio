@@ -1,40 +1,74 @@
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 
-export default function Hero({ darkMode = false }: { darkMode?: boolean }) {
-    const phrases = [
-        "Think Different",
-        "Code with Honor",
-        "Solve Problems",
-        "Stay Focused",
-        "Embrace Discipline",
-        "Build with Purpose",
-        "Lead by Example",
-        "Master the Craft",
-        "Push Your Limits",
-        "Stay Humble",
-        "Innovate Daily",
-        "Work Hard",
-        "Be Relentless",
-        "Own Your Code",
-        "Challenge Yourself",
-        "Keep Learning",
-        "Deliver Excellence",
-        "Stay Consistent",
-        "Prioritize Quality",
-        "Respect the Process",
-        "Be Accountable",
-        "Think Big",
-        "Act Boldly",
-        "Stay Curious",
-        "Balance Logic",
-        "Seek Clarity",
-        "Adapt Quickly",
-        "Code Clean",
-        "Be Resilient",
-        "Finish Strong",
-        "Lead with Integrity"
-    ];
+export default function Hero({ darkMode = false, lang = "hu" }: { darkMode?: boolean; lang?: "hu" | "en" }) {
+    const phrases = lang === "hu"
+        ? [
+            "Gondolkodj másképp",
+            "Kódolj tisztességgel",
+            "Oldj meg problémákat",
+            "Maradj fókuszált",
+            "Vállald a fegyelmet",
+            "Építs céllal",
+            "Mutass példát",
+            "Mestereld a szakmát",
+            "Lépj túl a határaidon",
+            "Maradj alázatos",
+            "Innoválj naponta",
+            "Dolgozz keményen",
+            "Légy kitartó",
+            "Vállald a kódod",
+            "Kihívd magad",
+            "Tanulj folyamatosan",
+            "Szállíts kiválóságot",
+            "Maradj következetes",
+            "Helyezd előtérbe a minőséget",
+            "Tiszteld a folyamatot",
+            "Vállalj felelősséget",
+            "Gondolkodj nagyban",
+            "Cselekedj bátran",
+            "Légy kíváncsi",
+            "Egyensúlyozz logikusan",
+            "Törekedj tisztánlátásra",
+            "Alkalmazkodj gyorsan",
+            "Kódolj tisztán",
+            "Légy ellenálló",
+            "Fejezd be erősen",
+            "Vezess integritással"
+        ]
+        : [
+            "Think Different",
+            "Code with Honor",
+            "Solve Problems",
+            "Stay Focused",
+            "Embrace Discipline",
+            "Build with Purpose",
+            "Lead by Example",
+            "Master the Craft",
+            "Push Your Limits",
+            "Stay Humble",
+            "Innovate Daily",
+            "Work Hard",
+            "Be Relentless",
+            "Own Your Code",
+            "Challenge Yourself",
+            "Keep Learning",
+            "Deliver Excellence",
+            "Stay Consistent",
+            "Prioritize Quality",
+            "Respect the Process",
+            "Be Accountable",
+            "Think Big",
+            "Act Boldly",
+            "Stay Curious",
+            "Balance Logic",
+            "Seek Clarity",
+            "Adapt Quickly",
+            "Code Clean",
+            "Be Resilient",
+            "Finish Strong",
+            "Lead with Integrity"
+        ];
 
     const [index, setIndex] = useState(0);
     const [displayedText, setDisplayedText] = useState("");
@@ -113,16 +147,74 @@ export default function Hero({ darkMode = false }: { darkMode?: boolean }) {
                         : '0 6px 32px 0 rgba(0,0,0,0.10)',
                 }}
             />
-            <motion.h1
-                className={`text-5xl font-bold mt-8 tracking-tight transition-colors duration-500 ${
-                    darkMode ? "text-gray-100" : "text-gray-900"
-                }`}
+            {/* Animated name swapper */}
+            <motion.div
+                className={`relative flex justify-center items-center mt-8`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
+                style={{ minHeight: '64px' /* to prevent layout shift */ }}
             >
-                Szabolcs Adorjáni
-            </motion.h1>
+                <motion.div
+                    key={lang}
+                    className={`absolute left-1/2 -translate-x-1/2 text-5xl font-bold tracking-tight transition-colors duration-500 ${darkMode ? "text-gray-100" : "text-gray-900"}`}
+                    initial={{ opacity: 0, x: lang === "hu" ? 40 : -40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: lang === "hu" ? -40 : 40 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5 }}
+                    style={{ position: "relative", textAlign: "center", width: "max-content" }}
+                >
+                    {lang === "hu" ? (
+                        <>
+                            <motion.span
+                                key="last-hu"
+                                initial={{ x: 30, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -30, opacity: 0 }}
+                                transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5 }}
+                                className="inline-block"
+                            >
+                                Adorjáni
+                            </motion.span>
+                            &nbsp;
+                            <motion.span
+                                key="first-hu"
+                                initial={{ x: -30, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: 30, opacity: 0 }}
+                                transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5, delay: 0.05 }}
+                                className="inline-block"
+                            >
+                                Szabolcs
+                            </motion.span>
+                        </>
+                    ) : (
+                        <>
+                            <motion.span
+                                key="first-en"
+                                initial={{ x: -30, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: 30, opacity: 0 }}
+                                transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5 }}
+                                className="inline-block"
+                            >
+                                Szabolcs
+                            </motion.span>
+                            &nbsp;
+                            <motion.span
+                                key="last-en"
+                                initial={{ x: 30, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -30, opacity: 0 }}
+                                transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5, delay: 0.05 }}
+                                className="inline-block"
+                            >
+                                Adorjáni
+                            </motion.span>
+                        </>
+                    )}
+                </motion.div>
+            </motion.div>
             <motion.div
                 className={`text-xl mt-4 h-8 text-center font-mono transition-colors duration-500 ${
                     darkMode ? "text-gray-300" : "text-gray-700"

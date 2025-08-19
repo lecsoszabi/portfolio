@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { FaInstagram, FaFacebook, FaLinkedin, FaGithub, FaMoon, FaSun } from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaGithub, FaMoon, FaSun } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import MacWindow from "@/components/MacWindow";
 import Hero from "@/components/Hero";
@@ -11,6 +11,19 @@ import Experience from "@/components/Experience";
 
 export default function Home() {
     const [darkMode, setDarkMode] = useState(false);
+    const [lang, setLang] = useState<"hu" | "en">("hu");
+
+    // Section titles and contact info mapping
+    const sectionTitles = {
+        skills: { hu: "Készségek", en: "Skills" },
+        projects: { hu: "Projektek", en: "Projects" },
+        experience: { hu: "Tapasztalat", en: "Experience" },
+        contact: { hu: "Kapcsolat", en: "Contact" }
+    };
+    const contactInfo = {
+        email1: "szabolcs.adorjani@partner.bmw.de",
+        email2: "szabolcs.adorjani@glosterdigital.com"
+    };
 
     return (
         <div className={`min-h-screen transition-colors duration-500 ${darkMode ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"} scrollbar-thin ${darkMode ? "scrollbar-track-gray-700 scrollbar-thumb-gray-500" : "scrollbar-track-gray-200 scrollbar-thumb-gray-400"}`}>
@@ -39,37 +52,45 @@ export default function Home() {
                     scrollbar-color: ${darkMode ? "#6b7280 #374151" : "#9ca3af #e5e7eb"};
                 }
             `}</style>
-            <button
-                onClick={() => setDarkMode(!darkMode)}
-                className={`fixed top-4 right-4 px-3 py-1 rounded-md transition-colors duration-500
-                    ${darkMode ? "bg-gray-700 text-gray-100" : "bg-gray-200 text-gray-900"}
-                    shadow hover:shadow-lg flex items-center justify-center`}
-                aria-label={darkMode ? "Switch to light mode" : "Switch to night mode"}
-            >
-                {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
-            </button>
+            <div className="fixed top-4 right-4 flex gap-3 z-50">
+                <button
+                    onClick={() => setLang(lang === "hu" ? "en" : "hu")}
+                    className={`px-3 py-1 rounded-md transition-colors duration-500
+                        ${darkMode ? "bg-gray-700 text-gray-100" : "bg-gray-200 text-gray-900"}
+                        shadow hover:shadow-lg flex items-center justify-center`}
+                    aria-label="Toggle language"
+                >
+                    {lang === "hu" ? "EN" : "HU"}
+                </button>
+                <button
+                    onClick={() => setDarkMode(!darkMode)}
+                    className={`px-3 py-1 rounded-md transition-colors duration-500
+                        ${darkMode ? "bg-gray-700 text-gray-100" : "bg-gray-200 text-gray-900"}
+                        shadow hover:shadow-lg flex items-center justify-center`}
+                    aria-label={darkMode ? "Switch to light mode" : "Switch to night mode"}
+                >
+                    {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
+                </button>
+            </div>
 
             <MacWindow darkMode={darkMode}>
                 <main className="pt-6">
-                    <Hero darkMode={darkMode} />
-                    <Section id="skills" title="Készségek" darkMode={darkMode}>
-                        <Skills darkMode={darkMode} />
+                    <Hero darkMode={darkMode} lang={lang} />
+                    <Section id="skills" title={sectionTitles.skills[lang]} darkMode={darkMode}>
+                        <Skills darkMode={darkMode} lang={lang} />
                     </Section>
-                    <Section id="projects" title="Projektek" darkMode={darkMode}>
-                        <Projects darkMode={darkMode} />
+                    <Section id="projects" title={sectionTitles.projects[lang]} darkMode={darkMode}>
+                        <Projects darkMode={darkMode} lang={lang} />
                     </Section>
-                    <Section id="experience" title="Tapasztalat" darkMode={darkMode}>
-                        <Experience darkMode={darkMode} />
+                    <Section id="experience" title={sectionTitles.experience[lang]} darkMode={darkMode}>
+                        <Experience darkMode={darkMode} lang={lang} />
                     </Section>
-                    <Section id="contact" title="Kapcsolat" darkMode={darkMode}>
+                    <Section id="contact" title={sectionTitles.contact[lang]} darkMode={darkMode}>
                         <p>
-                            <a href="mailto:szabolcs.adorjani@partner.bmw.de" className="underline">szabolcs.adorjani@partner.bmw.de</a>
+                            <a href={`mailto:${contactInfo.email1}`} className="underline">{contactInfo.email1}</a>
                         </p>
                         <p>
-                            <a href="mailto:szabolcs.adorjani@glosterdigital.com" className="underline">szabolcs.adorjani@glosterdigital.com</a>
-                        </p>
-                        <p>
-                            <a href="tel:+36123456789" className="underline">+36 1 234 56789</a>
+                            <a href={`mailto:${contactInfo.email2}`} className="underline">{contactInfo.email2}</a>
                         </p>
                         <div className="flex gap-4 mt-4">
                             <a
