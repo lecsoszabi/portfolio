@@ -1,7 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-interface Skill { name: string; level: number; }
+interface Skill {
+    name: string;
+    level: number;
+}
 
 const skills: Skill[] = [
     { name: "TypeScript", level: 90 },
@@ -12,7 +15,7 @@ const skills: Skill[] = [
     { name: "Kotlin", level: 50 },
 ];
 
-export default function Skills() {
+export default function Skills({ darkMode = false }: { darkMode?: boolean }) {
     const [started, setStarted] = useState(false);
     const [animatedLevels, setAnimatedLevels] = useState<number[]>(skills.map(() => 0));
     const sectionRef = useRef<HTMLDivElement>(null);
@@ -39,13 +42,17 @@ export default function Skills() {
             {skills.map((skill, idx) => (
                 <div
                     key={skill.name}
-                    className="p-4 bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow"
+                    className={`p-4 rounded-2xl transition-shadow transition-colors duration-500
+                        ${darkMode
+                            ? "bg-gray-800 border border-gray-700 shadow-xl hover:shadow-2xl"
+                            : "bg-white border border-gray-200 shadow-lg hover:shadow-xl"
+                        }`}
                 >
                     <div className="flex justify-between mb-1">
-                        <span className="text-gray-900 font-semibold">{skill.name}</span>
-                        <span className="text-gray-700">{animatedLevels[idx]}%</span>
+                        <span className={`font-semibold transition-colors duration-500 ${darkMode ? "text-gray-100" : "text-gray-900"}`}>{skill.name}</span>
+                        <span className={`transition-colors duration-500 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>{animatedLevels[idx]}%</span>
                     </div>
-                    <div className="w-full h-4 bg-gray-300 rounded-full overflow-hidden">
+                    <div className={`w-full h-4 rounded-full overflow-hidden transition-colors duration-500 ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}>
                         <div
                             style={{ width: `${animatedLevels[idx]}%` }}
                             className="h-4 bg-blue-600 rounded-full transition-all duration-700 shadow-sm"

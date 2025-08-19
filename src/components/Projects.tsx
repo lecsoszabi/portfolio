@@ -6,7 +6,7 @@ const projects = [
     { title: "Trivia quiz", desc: "Random quiz app globális pontokkal.", stack: ["Angular", "RestAPI"], href: "https://github.com/lecsoszabi/AngularQuizApp" },
 ];
 
-export default function Projects() {
+export default function Projects({ darkMode = false }: { darkMode?: boolean }) {
     return (
         <div className="grid md:grid-cols-2 gap-6">
             {projects.map(p => (
@@ -14,16 +14,30 @@ export default function Projects() {
                     key={p.title}
                     href={p.href}
                     target="_blank"
-                    className="group rounded-2xl bg-white border border-gray-200 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all p-5"
+                    className={`group rounded-2xl transition-all p-5 transform hover:scale-105
+                        ${darkMode
+                            ? "bg-gray-800 border border-gray-700 shadow-xl hover:shadow-2xl"
+                            : "bg-white border border-gray-200 shadow-lg hover:shadow-xl"
+                        }
+                    `}
                 >
                     <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-gray-900">{p.title}</h3>
+                        <h3 className={`text-lg font-semibold transition-colors duration-500 ${darkMode ? "text-gray-100" : "text-gray-900"}`}>{p.title}</h3>
                         <ExternalLink className="size-4 opacity-60 group-hover:opacity-100" />
                     </div>
-                    <p className="mt-2 text-sm text-gray-700">{p.desc}</p>
-                    <div className="mt-3 flex flex-wrap gap-2 text-xs text-gray-600">
+                    <p className={`mt-2 text-sm transition-colors duration-500 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>{p.desc}</p>
+                    <div className={`mt-3 flex flex-wrap gap-2 text-xs transition-colors duration-500 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
                         {p.stack.map(s => (
-                            <span key={s} className="rounded-full bg-gray-100 px-2 py-0.5 border border-gray-200">{s}</span>
+                            <span
+                                key={s}
+                                className={`rounded-full px-2 py-0.5 border transition-colors duration-500
+                                    ${darkMode
+                                        ? "bg-gray-900 border-gray-700 text-gray-200"
+                                        : "bg-gray-100 border-gray-200 text-gray-600"
+                                    }`}
+                            >
+                                {s}
+                            </span>
                         ))}
                     </div>
                 </a>

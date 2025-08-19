@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-export default function BootScreen({ onFinish }: { onFinish: () => void }) {
-    const [progress, setProgress] = useState(0);
+export default function BootScreen({ onFinishAction }: { onFinishAction: () => void }) {
+    const [progress, setProgress] = useState<number>(0);
     const [step, setStep] = useState(0);
 
     useEffect(() => {
@@ -12,9 +12,9 @@ export default function BootScreen({ onFinish }: { onFinish: () => void }) {
             const t = setTimeout(() => setProgress(progress + 5), 30); // Gyors animáció
             return () => clearTimeout(t);
         } else {
-            setTimeout(onFinish, 700);
+            setTimeout(onFinishAction, 700);
         }
-    }, [progress, onFinish]);
+    }, [progress, onFinishAction]);
 
     useEffect(() => {
         if (progress > 25 && step === 0) setStep(1);
