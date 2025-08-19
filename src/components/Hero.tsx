@@ -1,14 +1,28 @@
+import { motion } from "framer-motion";
+
 export default function Hero() {
     return (
-        <div id="home" className="min-h-screen flex items-center justify-center bg-black text-white">
-            <div className="text-center">
-                <p className="text-neutral-400 text-sm">Szoftverfejlesztő</p>
-                <h1 className="text-5xl font-bold mt-2">Szabolcs Adorjáni</h1>
-                <div className="mt-6 flex justify-center gap-4">
-                    <a href="#projects" className="px-4 py-2 rounded-xl bg-white text-black">Projektek</a>
-                    <a href="#contact" className="px-4 py-2 rounded-xl border border-white/20">Kapcsolat</a>
-                </div>
-            </div>
+        <div
+            id="home"
+            className="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900 px-4"
+        >
+            <motion.img
+                src="/input.png"
+                alt="Profile"
+                className="w-40 h-40 rounded-2xl shadow-lg object-cover"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: 'easeOut' }}
+                style={{ boxShadow: '0 6px 32px 0 rgba(0,0,0,0.10)' }}
+            />
+            <motion.h1
+                className="text-5xl font-bold mt-8 text-gray-900 tracking-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
+            >
+                Szabolcs Adorjáni
+            </motion.h1>
         </div>
     );
 }

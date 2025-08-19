@@ -1,20 +1,14 @@
-
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
 
-interface Skill {
-    name: string;
-    level: number;
-}
+interface Skill { name: string; level: number; }
 
 const skills: Skill[] = [
-    { name: "TypeScript", level: 50 },
+    { name: "TypeScript", level: 90 },
     { name: "Java", level: 80 },
-    { name: "Python", level: 60 },
-    { name: "C++", level: 40 },
-    { name: "JavaScript", level: 78 },
+    { name: "Python", level: 70 },
+    { name: "C++", level: 60 },
+    { name: "JavaScript", level: 85 },
     { name: "Kotlin", level: 50 },
 ];
 
@@ -24,16 +18,9 @@ export default function Skills() {
     const sectionRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const observer = new window.IntersectionObserver(
-            (entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        setStarted(true);
-                    }
-                });
-            },
-            { threshold: 0.5 }
-        );
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => { if (entry.isIntersecting) setStarted(true); });
+        }, { threshold: 0.5 });
         if (sectionRef.current) observer.observe(sectionRef.current);
         return () => observer.disconnect();
     }, []);
@@ -41,38 +28,29 @@ export default function Skills() {
     useEffect(() => {
         if (!started) return;
         skills.forEach((skill, i) => {
-            const delay = Math.random() * 700;
             setTimeout(() => {
-                setAnimatedLevels((prev) =>
-                    prev.map((v, idx) => (idx === i ? skill.level : v))
-                );
-            }, delay);
+                setAnimatedLevels(prev => prev.map((v, idx) => idx === i ? skill.level : v));
+            }, i * 200);
         });
     }, [started]);
 
     return (
-        <div
-            ref={sectionRef}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 p-5"
-        >
-            {skills.map((skill, index) => (
+        <div ref={sectionRef} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {skills.map((skill, idx) => (
                 <div
                     key={skill.name}
-                    className="flex flex-col items-center p-4 bg-black shadow-md hover:shadow-lg transition-shadow duration-300"
+                    className="p-4 bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow"
                 >
-                    <div className="w-24 h-24">
-                        <CircularProgressbar
-                            value={animatedLevels[index]}
-                            text={`${animatedLevels[index]}%`}
-                            styles={buildStyles({
-                                pathColor: "#3b82f6",
-                                trailColor: "#374151",
-                                textColor: "#ffffff",
-                                textSize: "18px",
-                            })}
+                    <div className="flex justify-between mb-1">
+                        <span className="text-gray-900 font-semibold">{skill.name}</span>
+                        <span className="text-gray-700">{animatedLevels[idx]}%</span>
+                    </div>
+                    <div className="w-full h-4 bg-gray-300 rounded-full overflow-hidden">
+                        <div
+                            style={{ width: `${animatedLevels[idx]}%` }}
+                            className="h-4 bg-blue-600 rounded-full transition-all duration-700 shadow-sm"
                         />
                     </div>
-                    <p className="mt-3 text-white font-medium">{skill.name}</p>
                 </div>
             ))}
         </div>
