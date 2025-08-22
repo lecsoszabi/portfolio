@@ -1,13 +1,14 @@
 "use client";
 import { useState } from "react";
-import { FaInstagram, FaLinkedin, FaGithub, FaMoon, FaSun } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaLinkedin, FaGithub, FaMoon, FaSun } from "react-icons/fa";
 import MacWindow from "@/components/MacWindow";
 import Hero from "@/components/Hero";
 import Section from "@/components/Section";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
+import Studies from "@/components/Studies";
+import ReactionGame from "@/components/ReactionGame";
 
 export default function Home() {
     const [darkMode, setDarkMode] = useState(false);
@@ -18,7 +19,8 @@ export default function Home() {
         skills: { hu: "Készségek", en: "Skills" },
         projects: { hu: "Projektek", en: "Projects" },
         experience: { hu: "Tapasztalat", en: "Experience" },
-        contact: { hu: "Kapcsolat", en: "Contact" }
+        contact: { hu: "Kapcsolat", en: "Contact" },
+        studies: { hu: "Tanulmányok", en: "Studies" }
     };
     const contactInfo = {
         email1: "szabolcs.adorjani@partner.bmw.de",
@@ -60,7 +62,7 @@ export default function Home() {
                         shadow hover:shadow-lg flex items-center justify-center`}
                     aria-label="Toggle language"
                 >
-                    {lang === "hu" ? "EN" : "HU"}
+                    {lang === "hu" ? "HU" : "EN"}
                 </button>
                 <button
                     onClick={() => setDarkMode(!darkMode)}
@@ -82,8 +84,14 @@ export default function Home() {
                     <Section id="projects" title={sectionTitles.projects[lang]} darkMode={darkMode}>
                         <Projects darkMode={darkMode} lang={lang} />
                     </Section>
+                    <Section id="studies" title={sectionTitles.studies[lang]} darkMode = {darkMode}>
+                        <Studies darkMode={darkMode} lang={lang} />
+                    </Section>
                     <Section id="experience" title={sectionTitles.experience[lang]} darkMode={darkMode}>
                         <Experience darkMode={darkMode} lang={lang} />
+                    </Section>
+                    <Section id="reaction-game" title={lang === "hu" ? "Reakcióidő játék" : "Reaction Time Game"} darkMode={darkMode}>
+                        <ReactionGame lang={lang} />
                     </Section>
                     <Section id="contact" title={sectionTitles.contact[lang]} darkMode={darkMode}>
                         <p>
@@ -93,15 +101,6 @@ export default function Home() {
                             <a href={`mailto:${contactInfo.email2}`} className="underline">{contactInfo.email2}</a>
                         </p>
                         <div className="flex gap-4 mt-4">
-                            <a
-                                href="https://instagram.com/lecsoszabi"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="Instagram"
-                                className={`hover:scale-110 transition ${darkMode ? "text-gray-100" : "text-gray-900"}`}
-                            >
-                                <FaInstagram size={28} />
-                            </a>
                             <a
                                 href="https://linkedin.com/"
                                 target="_blank"
@@ -119,15 +118,6 @@ export default function Home() {
                                 className={`hover:scale-110 transition ${darkMode ? "text-gray-100" : "text-gray-900"}`}
                             >
                                 <FaGithub size={28} />
-                            </a>
-                            <a
-                                href="https://twitter.com/lecsoszabi"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="X"
-                                className={`hover:scale-110 transition ${darkMode ? "text-gray-100" : "text-gray-900"}`}
-                            >
-                                <FaXTwitter size={28} />
                             </a>
                         </div>
                     </Section>
