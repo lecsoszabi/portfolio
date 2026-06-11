@@ -1,7 +1,15 @@
-import { motion, useAnimation } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useState, useRef, RefObject } from "react";
 
-export default function Hero({ darkMode = false, lang = "hu" }: { darkMode?: boolean; lang?: "hu" | "en" }) {
+export default function Hero({
+    darkMode = false,
+    lang = "hu",
+    containerRef,
+}: {
+    darkMode?: boolean;
+    lang?: "hu" | "en";
+    containerRef?: RefObject<HTMLDivElement | null>;
+}) {
     const phrasesHu = [
       "Gondolkodj másképp",
       "Kódolj becsülettel",
@@ -75,6 +83,17 @@ export default function Hero({ darkMode = false, lang = "hu" }: { darkMode?: boo
     const [blink, setBlink] = useState(true);
     const pauseRef = useRef(false);
     const prevIndexRef = useRef<number | null>(null);
+    const heroRef = useRef<HTMLDivElement>(null);
+
+    // Parallax: as the hero scrolls out, content drifts up at different speeds and fades
+    const { scrollYProgress } = useScroll({
+        container: containerRef,
+        target: heroRef,
+        offset: ["start start", "end start"],
+    });
+    const imageY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+    const textY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+    const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
     useEffect(() => {
         // On phrase change, ensure no two identical phrases appear consecutively
@@ -125,20 +144,24 @@ export default function Hero({ darkMode = false, lang = "hu" }: { darkMode?: boo
     }, []);
 
     return (
-        <div
+        <motion.div
             id="home"
-            className={`min-h-screen flex flex-col items-center justify-center px-4 transition-colors duration-500 ${
+            ref={heroRef}
+            style={{ opacity: heroOpacity }}
+            className={`relative min-h-screen flex flex-col items-center justify-center px-4 transition-colors duration-500 ${
                 darkMode ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"
             }`}
         >
+            <motion.div style={{ y: imageY }}>
             <motion.img
                 src="/input.png"
                 alt="Profile"
                 className={`w-40 h-40 rounded-2xl object-cover shadow-lg transition-shadow duration-500 ${
                     darkMode ? "" : "border border-gray-200"
                 }`}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: -20, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                whileHover={{ scale: 1.04, rotate: 1 }}
                 transition={{ duration: 1, ease: 'easeOut' }}
                 style={{
                     boxShadow: darkMode
@@ -146,7 +169,9 @@ export default function Hero({ darkMode = false, lang = "hu" }: { darkMode?: boo
                         : '0 6px 32px 0 rgba(0,0,0,0.10)',
                 }}
             />
+            </motion.div>
             {/* Animated name swapper */}
+            <motion.div style={{ y: textY }}>
             <motion.div
                 className={`relative flex justify-center items-center mt-8`}
                 initial={{ opacity: 0, y: 20 }}
@@ -225,6 +250,34 @@ export default function Hero({ darkMode = false, lang = "hu" }: { darkMode?: boo
                 {displayedText}
                 <span style={{ opacity: blink ? 1 : 0 }}>|</span>
             </motion.div>
-        </div>
+            </motion.div>
+            {/* Scroll hint */}
+            <motion.a
+                href="#skills"
+                aria-label={lang === "hu" ? "Görgess a készségekhez" : "Scroll to skills"}
+                className={`absolute bottom-24 left-1/2 -translate-x-1/2 transition-colors duration-500 ${
+                    darkMode ? "text-gray-500 hover:text-gray-300" : "text-gray-400 hover:text-gray-600"
+                }`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2, duration: 0.8 }}
+            >
+                <motion.svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <path d="m6 9 6 6 6-6" />
+                </motion.svg>
+            </motion.a>
+        </motion.div>
     );
 }

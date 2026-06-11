@@ -1,3 +1,5 @@
+"use client";
+import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 
 const projects = [
@@ -39,15 +41,42 @@ const projects = [
     }
 ];
 
+const container = {
+    hidden: {},
+    show: {
+        transition: { staggerChildren: 0.12 }
+    }
+};
+
+const item = {
+    hidden: { opacity: 0, y: 28 },
+    show: {
+        opacity: 1,
+        y: 0,
+        transition: { type: "spring" as const, stiffness: 260, damping: 24 }
+    }
+};
+
 export default function Projects({ darkMode = false, lang = "hu" }: { darkMode?: boolean; lang?: "hu" | "en" }) {
     return (
-        <div className="grid md:grid-cols-2 gap-6">
-            {projects.map((p, idx) => (
-                <a
+        <motion.div
+            className="grid md:grid-cols-2 gap-6"
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+        >
+            {projects.map((p) => (
+                <motion.a
                     key={typeof p.title === "string" ? p.title : p.title.en}
                     href={p.href}
                     target="_blank"
-                    className={`group rounded-2xl transition-all p-5 transform hover:scale-105
+                    rel="noopener noreferrer"
+                    variants={item}
+                    whileHover={{ y: -6, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 22 }}
+                    className={`group rounded-2xl p-5 cursor-pointer
                         ${darkMode
                             ? "bg-gray-800 border border-gray-700 shadow-xl hover:shadow-2xl"
                             : "bg-white border border-gray-200 shadow-lg hover:shadow-xl"
@@ -56,7 +85,7 @@ export default function Projects({ darkMode = false, lang = "hu" }: { darkMode?:
                 >
                     <div className="flex items-center justify-between">
                         <h3 className={`text-lg font-semibold transition-colors duration-500 ${darkMode ? "text-gray-100" : "text-gray-900"}`}>{typeof p.title === "string" ? p.title : p.title[lang]}</h3>
-                        <ExternalLink className="size-4 opacity-60 group-hover:opacity-100" />
+                        <ExternalLink className="size-4 opacity-60 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </div>
                     <p className={`mt-2 text-sm transition-colors duration-500 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>{typeof p.desc === "string" ? p.desc : p.desc[lang]}</p>
                     <div className={`mt-3 flex flex-wrap gap-2 text-xs transition-colors duration-500 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
@@ -73,8 +102,8 @@ export default function Projects({ darkMode = false, lang = "hu" }: { darkMode?:
                             </span>
                         ))}
                     </div>
-                </a>
+                </motion.a>
             ))}
-        </div>
+        </motion.div>
     );
 }

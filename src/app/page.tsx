@@ -1,18 +1,22 @@
 "use client";
-import { useState } from "react";
-import { FaLinkedin, FaGithub, FaMoon, FaSun } from "react-icons/fa";
+import { useState, useRef } from "react";
+import { motion, MotionConfig } from "framer-motion";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { Mail } from "lucide-react";
 import MacWindow from "@/components/MacWindow";
+import MenuBar from "@/components/MenuBar";
+import Dock from "@/components/Dock";
 import Hero from "@/components/Hero";
 import Section from "@/components/Section";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
 import Studies from "@/components/Studies";
-import ReactionGame from "@/components/ReactionGame";
 
 export default function Home() {
     const [darkMode, setDarkMode] = useState(false);
     const [lang, setLang] = useState<"hu" | "en">("hu");
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     // Section titles and contact info mapping
     const sectionTitles = {
@@ -22,107 +26,90 @@ export default function Home() {
         contact: { hu: "Kapcsolat", en: "Contact" },
         studies: { hu: "Tanulmányok", en: "Studies" }
     };
-    const contactInfo = {
-        email1: "szabolcs.adorjani@partner.bmw.de",
-        email2: "szabolcs.adorjani@glosterdigital.com"
-    };
+    const emails = [
+        "szabolcs.adorjani@partner.bmw.de",
+        "szabolcs.adorjani@glosterdigital.com"
+    ];
 
     return (
-        <div className={`min-h-screen transition-colors duration-500 ${darkMode ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"} scrollbar-thin ${darkMode ? "scrollbar-track-gray-700 scrollbar-thumb-gray-500" : "scrollbar-track-gray-200 scrollbar-thumb-gray-400"}`}>
-            <style>{`
-                .scrollbar-thin::-webkit-scrollbar {
-                    width: 8px;
-                    height: 8px;
-                }
-                .scrollbar-track-gray-200::-webkit-scrollbar-track {
-                    background: #e5e7eb; /* Tailwind gray-200 */
-                }
-                .scrollbar-thumb-gray-400::-webkit-scrollbar-thumb {
-                    background-color: #9ca3af; /* Tailwind gray-400 */
-                    border-radius: 4px;
-                }
-                .scrollbar-track-gray-700::-webkit-scrollbar-track {
-                    background: #374151; /* Tailwind gray-700 */
-                }
-                .scrollbar-thumb-gray-500::-webkit-scrollbar-thumb {
-                    background-color: #6b7280; /* Tailwind gray-500 */
-                    border-radius: 4px;
-                }
-                /* Firefox scrollbar */
-                .scrollbar-thin {
-                    scrollbar-width: thin;
-                    scrollbar-color: ${darkMode ? "#6b7280 #374151" : "#9ca3af #e5e7eb"};
-                }
-            `}</style>
-            <div className="fixed top-4 right-4 flex gap-3 z-50">
-                <button
-                    onClick={() => setLang(lang === "hu" ? "en" : "hu")}
-                    className={`px-3 py-1 rounded-md transition-colors duration-500
-                        ${darkMode ? "bg-gray-700 text-gray-100" : "bg-gray-200 text-gray-900"}
-                        shadow hover:shadow-lg flex items-center justify-center`}
-                    aria-label="Toggle language"
-                >
-                    {lang === "hu" ? "HU" : "EN"}
-                </button>
-                <button
-                    onClick={() => setDarkMode(!darkMode)}
-                    className={`px-3 py-1 rounded-md transition-colors duration-500
-                        ${darkMode ? "bg-gray-700 text-gray-100" : "bg-gray-200 text-gray-900"}
-                        shadow hover:shadow-lg flex items-center justify-center`}
-                    aria-label={darkMode ? "Switch to light mode" : "Switch to night mode"}
-                >
-                    {darkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
-                </button>
-            </div>
+        <MotionConfig reducedMotion="user">
+        <div className={`min-h-screen transition-colors duration-500 ${darkMode ? "desktop-dark text-gray-100" : "desktop-light text-gray-900"}`}>
+            <MenuBar darkMode={darkMode} setDarkMode={setDarkMode} lang={lang} setLang={setLang} />
 
-            <MacWindow darkMode={darkMode}>
-                <main className="pt-6">
-                    <Hero darkMode={darkMode} lang={lang} />
-                    <Section id="skills" title={sectionTitles.skills[lang]} darkMode={darkMode}>
-                        <Skills darkMode={darkMode} lang={lang} />
-                    </Section>
-                    <Section id="projects" title={sectionTitles.projects[lang]} darkMode={darkMode}>
-                        <Projects darkMode={darkMode} lang={lang} />
-                    </Section>
-                    <Section id="studies" title={sectionTitles.studies[lang]} darkMode = {darkMode}>
-                        <Studies darkMode={darkMode} lang={lang} />
-                    </Section>
-                    <Section id="experience" title={sectionTitles.experience[lang]} darkMode={darkMode}>
-                        <Experience darkMode={darkMode} lang={lang} />
-                    </Section>
-                    <Section id="reaction-game" title={lang === "hu" ? "Reakcióidő játék" : "Reaction Time Game"} darkMode={darkMode}>
-                        <ReactionGame lang={lang} />
-                    </Section>
-                    <Section id="contact" title={sectionTitles.contact[lang]} darkMode={darkMode}>
-                        <p>
-                            <a href={`mailto:${contactInfo.email1}`} className="underline">{contactInfo.email1}</a>
-                        </p>
-                        <p>
-                            <a href={`mailto:${contactInfo.email2}`} className="underline">{contactInfo.email2}</a>
-                        </p>
-                        <div className="flex gap-4 mt-4">
-                            <a
-                                href="https://linkedin.com/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="LinkedIn"
-                                className={`hover:scale-110 transition ${darkMode ? "text-gray-100" : "text-gray-900"}`}
-                            >
-                                <FaLinkedin size={28} />
-                            </a>
-                            <a
-                                href="https://github.com/lecsoszabi"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="GitHub"
-                                className={`hover:scale-110 transition ${darkMode ? "text-gray-100" : "text-gray-900"}`}
-                            >
-                                <FaGithub size={28} />
-                            </a>
-                        </div>
-                    </Section>
-                </main>
-            </MacWindow>
+            <div className="h-screen pt-12 pb-5 px-4">
+                <MacWindow
+                    darkMode={darkMode}
+                    scrollRef={scrollRef}
+                    dock={<Dock darkMode={darkMode} lang={lang} scrollRef={scrollRef} />}
+                >
+                    <main className="pt-6">
+                        <Hero darkMode={darkMode} lang={lang} containerRef={scrollRef} />
+                        <Section id="skills" title={sectionTitles.skills[lang]} darkMode={darkMode}>
+                            <Skills darkMode={darkMode} lang={lang} />
+                        </Section>
+                        <Section id="projects" title={sectionTitles.projects[lang]} darkMode={darkMode}>
+                            <Projects darkMode={darkMode} lang={lang} />
+                        </Section>
+                        <Section id="studies" title={sectionTitles.studies[lang]} darkMode={darkMode}>
+                            <Studies darkMode={darkMode} lang={lang} />
+                        </Section>
+                        <Section id="experience" title={sectionTitles.experience[lang]} darkMode={darkMode}>
+                            <Experience darkMode={darkMode} lang={lang} />
+                        </Section>
+                        <Section id="contact" title={sectionTitles.contact[lang]} darkMode={darkMode}>
+                            <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                                {emails.map((email) => (
+                                    <motion.a
+                                        key={email}
+                                        href={`mailto:${email}`}
+                                        whileHover={{ y: -4, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        transition={{ type: "spring", stiffness: 320, damping: 22 }}
+                                        className={`flex items-center gap-3 p-4 rounded-2xl border cursor-pointer transition-colors duration-500
+                                            ${darkMode
+                                                ? "bg-gray-800 border-gray-700 shadow-xl hover:shadow-2xl"
+                                                : "bg-white border-gray-200 shadow-lg hover:shadow-xl"
+                                            }`}
+                                    >
+                                        <Mail className={`size-5 shrink-0 ${darkMode ? "text-blue-400" : "text-blue-600"}`} />
+                                        <span className="font-mono text-xs break-all">{email}</span>
+                                    </motion.a>
+                                ))}
+                            </div>
+                            <div className="flex justify-center gap-5 mt-8">
+                                <motion.a
+                                    href="https://linkedin.com/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="LinkedIn"
+                                    whileHover={{ scale: 1.15, y: -2 }}
+                                    whileTap={{ scale: 0.92 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                                    className={darkMode ? "text-gray-100" : "text-gray-900"}
+                                >
+                                    <FaLinkedin size={28} />
+                                </motion.a>
+                                <motion.a
+                                    href="https://github.com/lecsoszabi"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="GitHub"
+                                    whileHover={{ scale: 1.15, y: -2 }}
+                                    whileTap={{ scale: 0.92 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                                    className={darkMode ? "text-gray-100" : "text-gray-900"}
+                                >
+                                    <FaGithub size={28} />
+                                </motion.a>
+                            </div>
+                        </Section>
+                        <footer className={`pb-24 pt-2 text-center font-mono text-[11px] transition-colors duration-500 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                            © 2026 Adorjáni Szabolcs · Next.js · Tailwind · Framer Motion
+                        </footer>
+                    </main>
+                </MacWindow>
+            </div>
         </div>
+        </MotionConfig>
     );
 }
