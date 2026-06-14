@@ -1,78 +1,39 @@
+"use client";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useState, useRef, RefObject } from "react";
+import { useEffect, useState, useRef } from "react";
+import { ArrowDown } from "lucide-react";
+import MStripe from "./MStripe";
 
-export default function Hero({
-    darkMode = false,
-    lang = "hu",
-    containerRef,
-}: {
-    darkMode?: boolean;
-    lang?: "hu" | "en";
-    containerRef?: RefObject<HTMLDivElement | null>;
-}) {
+export default function Hero({ darkMode = false, lang = "hu" }: { darkMode?: boolean; lang?: "hu" | "en" }) {
+    // Motivációs mottók — magyarul megfogalmazva, az angol a fordításuk.
     const phrasesHu = [
-      "Gondolkodj másképp",
-      "Kódolj becsülettel",
-      "Találd meg a megoldást",
-      "Maradj összpontosított",
-      "Építs tudatosan",
-      "Mutass példát",
-      "Válj a szakmád mesterévé",
-      "Lépj túl a határaidon",
-      "Maradj alázatos",
-      "Újulj meg minden nap",
-      "Dolgozz kitartóan",
-      "Légy állhatatos",
-      "Légy állhatatos",
-      "Vállald a munkád eredményét",
-      "Hívd ki önmagad",
-      "Tanulj egy életen át",
-      "Törekedj a kiválóságra",
-      "Légy következetes",
-      "Tedd az első helyre a minőséget",
-      "Tiszteld a folyamatot",
-      "Vállalj felelősséget",
-      "Gondolkodj nagyban",
-      "Cselekedj bátran",
-      "Őrizd meg a kíváncsiságod",
-      "Találd meg az egyensúlyt",
-      "Törekedj tisztánlátásra",
-      "Alkalmazkodj gyorsan",
-      "Írj tiszta kódot",
-      "Légy rugalmas",
-      "Vezess tisztességgel"
+        "Fejlődj egy kicsit minden nap",
+        "Írj kódot, amire büszke vagy",
+        "Keresd az egyszerű megoldást",
+        "A részletek teszik a különbséget",
+        "Tanulj a hibáidból",
+        "Maradj kíváncsi",
+        "Ne add fel a nehezénél",
+        "Minden hiba egy lecke",
+        "Csináld szívvel",
+        "A kitartás kifizetődik",
+        "Lépj túl a határaidon",
+        "Építs valami hasznosat",
     ];
 
     const phrasesEn = [
-      "Think Different",
-      "Code with Honor",
-      "Solve Problems",
-      "Stay Focused",
-      "Build with Purpose",
-      "Lead by Example",
-      "Master the Craft",
-      "Push Your Limits",
-      "Stay Humble",
-      "Innovate Daily",
-      "Work Hard",
-      "Be Relentless",
-      "Own Your Code",
-      "Challenge Yourself",
-      "Keep Learning",
-      "Deliver Excellence",
-      "Stay Consistent",
-      "Prioritize Quality",
-      "Respect the Process",
-      "Be Accountable",
-      "Think Big",
-      "Act Boldly",
-      "Stay Curious",
-      "Balance Logic",
-      "Seek Clarity",
-      "Adapt Quickly",
-      "Code Clean",
-      "Be Resilient",
-      "Lead with Integrity"
+        "Get a little better every day",
+        "Write code you're proud of",
+        "Look for the simple solution",
+        "The details make the difference",
+        "Learn from your mistakes",
+        "Stay curious",
+        "Don't give up when it gets hard",
+        "Every bug is a lesson",
+        "Do it with heart",
+        "Persistence pays off",
+        "Push past your limits",
+        "Build something useful",
     ];
 
     const phrases = lang === "hu" ? phrasesHu : phrasesEn;
@@ -82,33 +43,19 @@ export default function Hero({
     const [isDeleting, setIsDeleting] = useState(false);
     const [blink, setBlink] = useState(true);
     const pauseRef = useRef(false);
-    const prevIndexRef = useRef<number | null>(null);
     const heroRef = useRef<HTMLDivElement>(null);
 
-    // Parallax: as the hero scrolls out, content drifts up at different speeds and fades
     const { scrollYProgress } = useScroll({
-        container: containerRef,
         target: heroRef,
         offset: ["start start", "end start"],
     });
-    const imageY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-    const textY = useTransform(scrollYProgress, [0, 1], [0, 60]);
-    const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
-    useEffect(() => {
-        // On phrase change, ensure no two identical phrases appear consecutively
-        if (index === prevIndexRef.current) {
-            setIndex((prev) => (prev + 1) % phrases.length);
-        }
-        prevIndexRef.current = index;
-    }, [index, phrases.length]);
+    const contentY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+    const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
     useEffect(() => {
         const typingInterval = setInterval(() => {
             if (pauseRef.current) return;
-
             const currentPhrase = phrases[index];
-
             if (!isDeleting) {
                 if (displayedText.length < currentPhrase.length) {
                     setDisplayedText(currentPhrase.substring(0, displayedText.length + 1));
@@ -131,153 +78,88 @@ export default function Hero({
                     setIndex(nextIndex);
                 }
             }
-        }, isDeleting ? 75 : 150);
-
+        }, isDeleting ? 50 : 110);
         return () => clearInterval(typingInterval);
     }, [displayedText, isDeleting, index, phrases]);
 
     useEffect(() => {
-        const blinkInterval = setInterval(() => {
-            setBlink((prev) => !prev);
-        }, 500);
+        const blinkInterval = setInterval(() => setBlink((p) => !p), 530);
         return () => clearInterval(blinkInterval);
     }, []);
 
     return (
-        <motion.div
-            id="home"
+        <section
             ref={heroRef}
-            style={{ opacity: heroOpacity }}
-            className={`relative min-h-screen flex flex-col items-center justify-center px-4 transition-colors duration-500 ${
-                darkMode ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"
-            }`}
+            id="home"
+            className="relative flex flex-col items-center justify-center px-6"
+            style={{ minHeight: "100vh" }}
         >
-            <motion.div style={{ y: imageY }}>
-            <motion.img
-                src="/input.png"
-                alt="Profile"
-                className={`w-40 h-40 rounded-2xl object-cover shadow-lg transition-shadow duration-500 ${
-                    darkMode ? "" : "border border-gray-200"
-                }`}
-                initial={{ opacity: 0, y: -20, scale: 0.92 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                whileHover={{ scale: 1.04, rotate: 1 }}
-                transition={{ duration: 1, ease: 'easeOut' }}
-                style={{
-                    boxShadow: darkMode
-                        ? '0 6px 32px 0 rgba(0,0,0,0.10)'
-                        : '0 6px 32px 0 rgba(0,0,0,0.10)',
-                }}
-            />
-            </motion.div>
-            {/* Animated name swapper */}
-            <motion.div style={{ y: textY }}>
             <motion.div
-                className={`relative flex justify-center items-center mt-8`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
-                style={{ minHeight: '64px' /* to prevent layout shift */ }}
+                style={{ y: contentY, opacity: contentOpacity }}
+                className="flex flex-col items-center text-center"
             >
-                <motion.div
-                    key={lang}
-                    className={`absolute left-1/2 -translate-x-1/2 text-5xl font-bold tracking-tight transition-colors duration-500 ${darkMode ? "text-gray-100" : "text-gray-900"}`}
-                    initial={{ opacity: 0, x: lang === "hu" ? 40 : -40 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: lang === "hu" ? -40 : 40 }}
-                    transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5 }}
-                    style={{ position: "relative", textAlign: "center", width: "max-content" }}
+                <motion.img
+                    src="/input.png"
+                    alt="Adorjáni Szabolcs"
+                    className="w-28 h-28 rounded-full object-cover mb-8"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                />
+
+                <motion.p
+                    className={`font-mono text-sm mb-4 transition-colors duration-500 ${darkMode ? "text-zinc-500" : "text-zinc-400"}`}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.6 }}
                 >
-                    {lang === "hu" ? (
-                        <>
-                            <motion.span
-                                key="last-hu"
-                                initial={{ x: 30, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: -30, opacity: 0 }}
-                                transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5 }}
-                                className="inline-block"
-                            >
-                                Adorjáni
-                            </motion.span>
-                            &nbsp;
-                            <motion.span
-                                key="first-hu"
-                                initial={{ x: -30, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: 30, opacity: 0 }}
-                                transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5, delay: 0.05 }}
-                                className="inline-block"
-                            >
-                                Szabolcs
-                            </motion.span>
-                        </>
-                    ) : (
-                        <>
-                            <motion.span
-                                key="first-en"
-                                initial={{ x: -30, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: 30, opacity: 0 }}
-                                transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5 }}
-                                className="inline-block"
-                            >
-                                Szabolcs
-                            </motion.span>
-                            &nbsp;
-                            <motion.span
-                                key="last-en"
-                                initial={{ x: 30, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: -30, opacity: 0 }}
-                                transition={{ type: "spring", stiffness: 320, damping: 30, duration: 0.5, delay: 0.05 }}
-                                className="inline-block"
-                            >
-                                Adorjáni
-                            </motion.span>
-                        </>
-                    )}
+                    {lang === "hu" ? "Szoftverfejlesztő" : "Software Developer"}
+                </motion.p>
+
+                <motion.h1
+                    className={`text-5xl md:text-7xl font-semibold tracking-tighter transition-colors duration-500 ${darkMode ? "text-zinc-100" : "text-zinc-900"}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.7, ease: "easeOut" }}
+                >
+                    {lang === "hu" ? "Adorjáni Szabolcs" : "Szabolcs Adorjáni"}
+                </motion.h1>
+
+                <motion.div
+                    initial={{ opacity: 0, scaleX: 0 }}
+                    animate={{ opacity: 1, scaleX: 1 }}
+                    transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
+                >
+                    <MStripe className="w-20 mt-6" glow />
+                </motion.div>
+
+                <motion.div
+                    className={`mt-5 h-7 font-mono text-lg transition-colors duration-500 ${darkMode ? "text-zinc-400" : "text-zinc-600"}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.9, duration: 0.6 }}
+                >
+                    {displayedText}
+                    <span className="text-[#0066B1]" style={{ opacity: blink ? 1 : 0 }}>_</span>
                 </motion.div>
             </motion.div>
-            <motion.div
-                className={`text-xl mt-4 h-8 text-center font-mono transition-colors duration-500 ${
-                    darkMode ? "text-gray-300" : "text-gray-700"
-                }`}
+
+            <motion.button
+                onClick={() => document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" })}
+                aria-label={lang === "hu" ? "Görgess tovább" : "Scroll down"}
+                className={`absolute bottom-10 transition-colors duration-500 ${darkMode ? "text-zinc-600 hover:text-zinc-300" : "text-zinc-300 hover:text-zinc-600"}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.3, duration: 0.8, ease: 'easeOut' }}
+                transition={{ delay: 1.6, duration: 0.8 }}
             >
-                {displayedText}
-                <span style={{ opacity: blink ? 1 : 0 }}>|</span>
-            </motion.div>
-            </motion.div>
-            {/* Scroll hint */}
-            <motion.a
-                href="#skills"
-                aria-label={lang === "hu" ? "Görgess a készségekhez" : "Scroll to skills"}
-                className={`absolute bottom-24 left-1/2 -translate-x-1/2 transition-colors duration-500 ${
-                    darkMode ? "text-gray-500 hover:text-gray-300" : "text-gray-400 hover:text-gray-600"
-                }`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2, duration: 0.8 }}
-            >
-                <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="28"
-                    height="28"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                <motion.span
+                    className="block"
                     animate={{ y: [0, 8, 0] }}
                     transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                 >
-                    <path d="m6 9 6 6 6-6" />
-                </motion.svg>
-            </motion.a>
-        </motion.div>
+                    <ArrowDown size={22} />
+                </motion.span>
+            </motion.button>
+        </section>
     );
 }

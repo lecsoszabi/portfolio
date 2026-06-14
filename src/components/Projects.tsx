@@ -1,40 +1,31 @@
 "use client";
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const projects = [
     {
-        title: {
-            hu: "Könyv Kölcsönző",
-            en: "Book Lending"
-        },
+        title: { hu: "Könyv Kölcsönző", en: "Book Lending" },
         desc: {
-            hu: "Generikus könyvtár rendszer, dinamikus adományozó rendszerrel",
-            en: "Generic library system with dynamic donor feature"
+            hu: "Könyvtári rendszer könyvek kölcsönzésére és adományozására.",
+            en: "A library app for lending and donating books."
         },
         stack: ["React", "Vite", "Quarkus"],
         href: "https://github.com/lecsoszabi/QuarkusKonyvtarAdatbazis"
     },
     {
-        title: {
-            hu: "Nailshop",
-            en: "Nailshop"
-        },
+        title: { hu: "Nailshop", en: "Nailshop" },
         desc: {
-            hu: "Webshop körömépítésre specializálódva.",
-            en: "Webshop specialized for nail building."
+            hu: "Webshop egy műkörmös üzletnek.",
+            en: "A webshop for a nail studio."
         },
         stack: ["Angular", "Firebase"],
         href: "https://github.com/lecsoszabi/nailShopWebker"
     },
     {
-        title: {
-            hu: "Trivia quiz",
-            en: "Trivia quiz"
-        },
+        title: { hu: "Trivia quiz", en: "Trivia quiz" },
         desc: {
-            hu: "Random quiz app globális pontokkal.",
-            en: "Random quiz app with global scores."
+            hu: "Kvízjáték online ranglistával.",
+            en: "A quiz game with an online leaderboard."
         },
         stack: ["Angular", "RestAPI"],
         href: "https://github.com/lecsoszabi/AngularQuizApp"
@@ -43,24 +34,18 @@ const projects = [
 
 const container = {
     hidden: {},
-    show: {
-        transition: { staggerChildren: 0.12 }
-    }
+    show: { transition: { staggerChildren: 0.1 } }
 };
 
 const item = {
-    hidden: { opacity: 0, y: 28 },
-    show: {
-        opacity: 1,
-        y: 0,
-        transition: { type: "spring" as const, stiffness: 260, damping: 24 }
-    }
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const } }
 };
 
 export default function Projects({ darkMode = false, lang = "hu" }: { darkMode?: boolean; lang?: "hu" | "en" }) {
     return (
         <motion.div
-            className="grid md:grid-cols-2 gap-6"
+            className={`border-t transition-colors duration-500 ${darkMode ? "border-zinc-800" : "border-zinc-200"}`}
             variants={container}
             initial="hidden"
             whileInView="show"
@@ -68,39 +53,36 @@ export default function Projects({ darkMode = false, lang = "hu" }: { darkMode?:
         >
             {projects.map((p) => (
                 <motion.a
-                    key={typeof p.title === "string" ? p.title : p.title.en}
+                    key={p.title.en}
                     href={p.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     variants={item}
-                    whileHover={{ y: -6, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ type: "spring", stiffness: 320, damping: 22 }}
-                    className={`group rounded-2xl p-5 cursor-pointer
+                    className={`group block border-b py-6 transition-colors duration-300
                         ${darkMode
-                            ? "bg-gray-800 border border-gray-700 shadow-xl hover:shadow-2xl"
-                            : "bg-white border border-gray-200 shadow-lg hover:shadow-xl"
-                        }
-                    `}
+                            ? "border-zinc-800 hover:bg-zinc-900/60"
+                            : "border-zinc-200 hover:bg-zinc-50"
+                        }`}
                 >
-                    <div className="flex items-center justify-between">
-                        <h3 className={`text-lg font-semibold transition-colors duration-500 ${darkMode ? "text-gray-100" : "text-gray-900"}`}>{typeof p.title === "string" ? p.title : p.title[lang]}</h3>
-                        <ExternalLink className="size-4 opacity-60 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </div>
-                    <p className={`mt-2 text-sm transition-colors duration-500 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>{typeof p.desc === "string" ? p.desc : p.desc[lang]}</p>
-                    <div className={`mt-3 flex flex-wrap gap-2 text-xs transition-colors duration-500 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                        {p.stack.map(s => (
-                            <span
-                                key={s}
-                                className={`rounded-full px-2 py-0.5 border transition-colors duration-500
-                                    ${darkMode
-                                        ? "bg-gray-900 border-gray-700 text-gray-200"
-                                        : "bg-gray-100 border-gray-200 text-gray-600"
-                                    }`}
-                            >
-                                {s}
-                            </span>
-                        ))}
+                    <div className="flex items-start justify-between gap-4 px-2">
+                        <div className="min-w-0">
+                            <h3 className={`text-lg font-medium flex items-center gap-1.5 transition-colors duration-500 ${darkMode ? "text-zinc-100" : "text-zinc-900"}`}>
+                                {p.title[lang]}
+                                <ArrowUpRight
+                                    className={`size-4 transition-all duration-300 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5`}
+                                />
+                            </h3>
+                            <p className={`mt-1 text-sm transition-colors duration-500 ${darkMode ? "text-zinc-400" : "text-zinc-600"}`}>
+                                {p.desc[lang]}
+                            </p>
+                        </div>
+                        <div className="hidden sm:flex flex-wrap justify-end gap-x-3 gap-y-1 shrink-0 pt-1">
+                            {p.stack.map((s) => (
+                                <span key={s} className={`font-mono text-xs transition-colors duration-500 ${darkMode ? "text-zinc-500" : "text-zinc-400"}`}>
+                                    {s}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </motion.a>
             ))}
